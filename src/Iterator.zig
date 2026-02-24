@@ -2,6 +2,7 @@ const std = @import("std");
 const Table = @import("Table.zig");
 const Row = @import("Row.zig");
 const Allocator = std.mem.Allocator;
+const Reader = std.Io.Reader;
 
 const Iterator = @This();
 
@@ -23,9 +24,7 @@ pub fn deinit(self: Iterator, allocator: Allocator) void {
     allocator.free(self.buffer);
 }
 
-const NextError = error{ReadFailed};
-
-pub fn next(self: *Iterator) NextError!?Row {
+pub fn next(self: *Iterator) Reader.Error!?Row {
     if (self.index >= self.table.number_of_records) return null;
 
     self.table.reader.readSliceAll(self.buffer) catch |err| switch (err) {
