@@ -23,7 +23,12 @@ pub fn get(self: Row, comptime T: type, field: Table.Field) !T {
     const end = start + field.length;
 
     switch (T) {
-        []const u8 => return std.mem.trimRight(u8, self.iterator.buffer[start..end], &[_]u8{0}),
+        []const u8 => {
+            const string = std.mem.trimEnd(u8, self.iterator.buffer[start..end], &[_]u8{0});
+
+            if (self.table.options.trim_strings) return std.mem.trim(u8, string, " ");
+            return string;
+        },
         u8 => {
             if (field.type == .numeric and field.number_of_decimal_places == 0) {
                 const int_raw = std.mem.trim(u8, self.iterator.buffer[start..end], " ");

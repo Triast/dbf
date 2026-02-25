@@ -25,14 +25,19 @@ pub fn deinit(self: Iterator, allocator: Allocator) void {
 }
 
 pub fn next(self: *Iterator) Reader.Error!?Row {
-    if (self.index >= self.table.number_of_records) return null;
+    while (true) {
+        if (self.index >= self.table.number_of_records) return null;
 
-    self.table.reader.readSliceAll(self.buffer) catch |err| switch (err) {
-        error.EndOfStream => return null,
-        error.ReadFailed => return err,
-    };
+        self.table.reader.readSliceAll(self.buffer) catch |err| switch (err) {
+            error.EndOfStream => return null,
+            error.ReadFailed => return err,
+        };
 
-    self.index += 1;
+        self.index += 1;
+
+        if (!self.table.options.ignore_deleted) break;
+        if (self.buffer[0] != '*') break;
+    }
 
     return .{
         .table = self.table,

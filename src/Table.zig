@@ -33,17 +33,23 @@ pub const Field = struct {
     number_of_decimal_places: u8,
 };
 
+const Options = struct {
+    ignore_deleted: bool = true,
+    trim_strings: bool = true,
+};
+
 last_update: Date,
 number_of_records: u32,
 position_of_first_data_record: u16,
 length_of_one_data_record: u16,
 fields: std.StringArrayHashMap(Field),
+options: Options,
 
 reader: *Reader,
 
 const InitError = Allocator.Error || Reader.Error;
 
-pub fn init(allocator: Allocator, reader: *Reader) InitError!Table {
+pub fn init(allocator: Allocator, reader: *Reader, options: Options) InitError!Table {
     var buf: [32]u8 = undefined;
     try reader.readSliceAll(&buf);
 
@@ -88,6 +94,7 @@ pub fn init(allocator: Allocator, reader: *Reader) InitError!Table {
         .position_of_first_data_record = position_of_first_data_record,
         .length_of_one_data_record = length_of_one_data_record,
         .fields = fields,
+        .options = options,
         .reader = reader,
     };
 }
