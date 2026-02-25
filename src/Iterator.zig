@@ -41,6 +41,7 @@ pub fn next(self: *Iterator) Reader.Error!?Row {
 
     return .{
         .table = self.table,
-        .iterator = self,
+        .buffer = self.buffer,
+        .index = self.index,
     };
 }

@@ -1,6 +1,7 @@
 const std = @import("std");
 const Date = @import("Date.zig");
 const Iterator = @import("Iterator.zig");
+const StructIterator = @import("iterators.zig").StructIterator;
 const Allocator = std.mem.Allocator;
 const Reader = std.Io.Reader;
 
@@ -111,4 +112,8 @@ pub fn deinit(self: *Table, allocator: Allocator) void {
 
 pub fn iter(self: *Table, allocator: Allocator) Allocator.Error!Iterator {
     return Iterator.init(allocator, self);
+}
+
+pub fn structIter(self: *Table, gpa: Allocator, T: type) Allocator.Error!StructIterator(T) {
+    return StructIterator(T).init(gpa, self);
 }

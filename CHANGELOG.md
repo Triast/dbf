@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Options for `Table` to ignore deleted record and trim `[]const u8`.
+- `structIter(gpa: std.mem.Allocator, T: type)` method to `Table`, which makes possible to iterate over a DBF table with each row as an instance of type `T`.
 
 ## 0.1.0 - 2026-02-24
 

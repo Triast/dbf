@@ -2,6 +2,7 @@ const std = @import("std");
 
 pub const Date = @import("Date.zig");
 pub const Iterator = @import("Iterator.zig");
+pub const StructIterator = @import("iterators.zig").StructIterator;
 pub const Row = @import("Row.zig");
 pub const Table = @import("Table.zig");
 
