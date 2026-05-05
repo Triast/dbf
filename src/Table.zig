@@ -43,7 +43,7 @@ last_update: Date,
 number_of_records: u32,
 position_of_first_data_record: u16,
 length_of_one_data_record: u16,
-fields: std.StringArrayHashMap(Field),
+fields: std.array_hash_map.String(Field),
 options: Options,
 
 reader: *Reader,
@@ -64,7 +64,7 @@ pub fn init(allocator: Allocator, reader: *Reader, options: Options) InitError!T
     const length_of_one_data_record = std.mem.readVarInt(u16, buf[10..12], .little);
 
     const field_count = (position_of_first_data_record - 296) / 32;
-    var fields = std.StringArrayHashMap(Field).init(allocator);
+    var fields: std.array_hash_map.String(Field) = .empty;
 
     const field_raw = try allocator.alloc(u8, field_count * 32);
     defer allocator.free(field_raw);
@@ -86,7 +86,7 @@ pub fn init(allocator: Allocator, reader: *Reader, options: Options) InitError!T
             .number_of_decimal_places = field_buf[17],
         };
 
-        try fields.put(std.mem.trimRight(u8, field.name, &[_]u8{0}), field);
+        try fields.put(allocator, std.mem.trimRight(u8, field.name, &[_]u8{0}), field);
     }
 
     return .{

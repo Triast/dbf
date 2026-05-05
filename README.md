@@ -18,4 +18,4 @@ const dbf = b.dependecy("dbf", .{});
 exe.root_module.addImport("dbf", dbf.module("dbf"));
 ```
 
-This library targets latest tagged release of zig, which is `0.15.2`.
+This library targets latest tagged release of zig, which is `0.16.0`.
