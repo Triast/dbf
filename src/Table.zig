@@ -69,7 +69,7 @@ pub fn init(allocator: Allocator, reader: *Reader, options: Options) InitError!T
     const field_raw = try allocator.alloc(u8, field_count * 32);
     defer allocator.free(field_raw);
     try reader.readSliceAll(field_raw);
-    try reader.discardAll(position_of_first_data_record - reader.seek);
+    try reader.discardAll(264); // database backlink
 
     var i: usize = 0;
     while (i < field_count) : (i += 1) {
@@ -86,7 +86,7 @@ pub fn init(allocator: Allocator, reader: *Reader, options: Options) InitError!T
             .number_of_decimal_places = field_buf[17],
         };
 
-        try fields.put(allocator, std.mem.trimRight(u8, field.name, &[_]u8{0}), field);
+        try fields.put(allocator, std.mem.trimEnd(u8, field.name, &[_]u8{0}), field);
     }
 
     return .{
@@ -107,7 +107,7 @@ pub fn deinit(self: *Table, allocator: Allocator) void {
         allocator.free(field.value_ptr.name);
     }
 
-    self.fields.deinit();
+    self.fields.deinit(allocator);
 }
 
 pub fn iter(self: *Table, allocator: Allocator) Allocator.Error!Iterator {
