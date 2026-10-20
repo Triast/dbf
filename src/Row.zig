@@ -58,7 +58,7 @@ pub fn get(self: Row, comptime T: type, field: Table.Field) !T {
 
             return std.fmt.parseFloat(T, std.mem.trim(u8, float_raw, " "));
         },
-        ?Date => return if (!std.ascii.eqlIgnoreCase(self.buffer[start..end], " " ** 8)) Date{
+        ?Date => return if (!std.ascii.eqlIgnoreCase(self.buffer[start..end], "        ")) Date{
             .year = try std.fmt.parseInt(u16, self.buffer[start .. start + 4], 10),
             .month = try std.fmt.parseInt(u4, self.buffer[start + 4 .. start + 6], 10),
             .day = try std.fmt.parseInt(u5, self.buffer[start + 6 .. end], 10),

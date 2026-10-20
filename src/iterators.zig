@@ -51,8 +51,8 @@ pub fn StructIterator(T: type) type {
 
             switch (@typeInfo(T)) {
                 .@"struct" => |info| {
-                    inline for (info.fields) |field| {
-                        @field(value, field.name) = try row.getByFieldName(field.type, comptimeUpperString(field.name));
+                    inline for (info.field_names, info.field_types) |field_name, field_type| {
+                        @field(value, field_name) = try row.getByFieldName(field_type, comptimeUpperString(field_name));
                     }
                 },
                 else => @compileError("Expected struct type, found '" ++ @typeName(T) ++ "'"),
